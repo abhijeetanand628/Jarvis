@@ -1,9 +1,7 @@
-import { Text, View } from "react-native";
+import React from 'react';
+import WelcomeScreen from '../Screens/WelcomeScreen';
 
-export default function Index() {
-  return (
-    <View style={{flex: 1, marginTop: "50%", alignItems: 'center'}}>
-      <Text style={{fontSize: 30 }}>Jarvis</Text>
-    </View>
-  );
+
+export default function index() {
+  return <WelcomeScreen />;
 }
