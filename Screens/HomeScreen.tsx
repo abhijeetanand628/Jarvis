@@ -1,14 +1,59 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { View, Text, Image, ScrollView, TouchableOpacity } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Features from '../components/Features';
 import { dummyMessages } from '../constants';
+import LottieView from 'lottie-react-native';
+import Voice from '@react-native-community/voice';
 
 export default function HomeScreen() {
     const [messages, setMessages] = useState(dummyMessages);
+    const [recording, setRecording] = useState(false);
+    const [speaking, setSpeaking] = useState(true);
+
+    const speechStartHandler = e => {
+        console.log('speech start handler');
+    }
+
+    const speechEndHandler = e => {
+        setRecording(false);
+        console.log('speech end handler');
+    }
+
+    const speechResultsHandler = e => {
+        console.log('voice event: ',e);
+    }
+
+    const speechErrorHandler = e => {
+        console.log('speech error handler: ',e);
+    }
+
+    const startRecording = async() => {
+        setRecording(true);
+    }
+
+    const clear = () => {
+        setMessages([]);
+    }
+
+    const stopSpeaking = () => {
+        setSpeaking(false);
+    }
+
+    useEffect(() => {
+        Voice.onSpeechStart = speechStartHandler;
+        Voice.onSpeechEnd = speechEndHandler;
+        Voice.onSpeechResults = speechResultsHandler;
+        Voice.onSpeechError = speechErrorHandler;
+
+        return () => {
+            Voice.destroy().then(Voice.removeAllListeners);
+        }
+    },[])
+
   return (
     <View style={{ flex: 1, backgroundColor: 'white' }}>
-        <View style={{flex: 0.45, justifyContent: 'center', alignItems: "center"}}>
+        <View style={{flex: 0.50, justifyContent: 'center', alignItems: "center"}}>
             <Image source={require('../assets/images/bot.png')} 
                 style={{width: wp(30), height: hp(20)}} />
         </View>
@@ -64,10 +109,47 @@ export default function HomeScreen() {
             )
         }
 
-        <View style={{flex: 0.2, justifyContent: 'center', alignItems: 'center'}}>
-            <TouchableOpacity>
-                <Image style={{borderRadius: wp(8), width: wp(20), height: hp(8), padding: wp(10), marginBottom: wp(2)}} source={require('../assets/images/recordingicon.jpg')} />
-            </TouchableOpacity>
+        <View style={{flex: 0.2, justifyContent: 'space-evenly', alignItems: 'center', flexDirection: 'row'}}>
+
+            {
+                speaking && (
+                    <TouchableOpacity 
+                        onPress={stopSpeaking}
+                        style={{backgroundColor: "#EF4444", borderRadius: wp(3.5), padding: wp(1.5)}} >
+                        <Text style={{color: 'white', fontWeight: '500'}}>Stop</Text>
+                    </TouchableOpacity>
+                )
+            }
+
+            {
+                recording ? (
+                    <TouchableOpacity>
+                        <LottieView style={{borderRadius: wp(8), width: wp(28), height: hp(11), marginBottom: wp(0.8)}} 
+                            resizeMode= "contain"
+                            source={require('../assets/images/voice.json')} 
+                            autoPlay
+                            loop
+                            />
+                    </TouchableOpacity>
+                ) : (
+                    <TouchableOpacity>
+                        <Image style={{borderRadius: wp(8), width: wp(27), height: hp(10), marginBottom: wp(1)}} 
+                            resizeMode= "contain"
+                            source={require('../assets/images/recordingicon.jpg')} />
+                    </TouchableOpacity>
+                )
+            }
+
+            {
+                messages.length > 0 && (
+                    <TouchableOpacity 
+                        onPress={clear}
+                        style={{backgroundColor: "#9CA3AF", borderRadius: wp(3.5), padding: wp(1.5)}} >
+                        <Text style={{color: 'white', fontWeight: '500'}}>Clear</Text>
+                    </TouchableOpacity>
+                )
+            }
+            
         </View>
 
     </View>
