@@ -148,35 +148,30 @@ android {
 }
 
 dependencies {
+    // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
 
-    // ✅ Material Design (version 1.12.0) with all unwanted transitive dependencies excluded
-    implementation("com.google.android.material:material:1.12.0") {
-        exclude group: "androidx.appcompat", module: "appcompat"
-        exclude group: "androidx.appcompat", module: "appcompat-resources"
-        exclude group: "androidx.activity", module: "activity"
-        exclude group: "androidx.fragment", module: "fragment"
+    def isGifEnabled = (findProperty('expo.gif.enabled') ?: "") == "true";
+    def isWebpEnabled = (findProperty('expo.webp.enabled') ?: "") == "true";
+    def isWebpAnimatedEnabled = (findProperty('expo.webp.animated') ?: "") == "true";
+
+    if (isGifEnabled) {
+        // For animated gif support
+        implementation("com.facebook.fresco:animated-gif:${expoLibs.versions.fresco.get()}")
     }
 
-    // ✅ Optional: Also include version 1.9.0 if a specific library depends on it
-    // Usually NOT needed if you're already including 1.12.0, but safe to include with same exclusions
-    implementation("com.google.android.material:material:1.9.0") {
-        exclude group: "androidx.appcompat", module: "appcompat"
+    if (isWebpEnabled) {
+        // For webp support
+        implementation("com.facebook.fresco:webpsupport:${expoLibs.versions.fresco.get()}")
+        if (isWebpAnimatedEnabled) {
+            // Animated webp support
+            implementation("com.facebook.fresco:animated-webp:${expoLibs.versions.fresco.get()}")
+        }
     }
 
-    // ✅ Global configuration: prevent appcompat from being pulled from ANY dependency
-    configurations.all {
-        exclude group: "androidx.appcompat", module: "appcompat"
-        exclude group: "androidx.appcompat", module: "appcompat-resources"
-        exclude group: "androidx.activity", module: "activity"
-        exclude group: "androidx.fragment", module: "fragment"
-    }
-
-    // ✅ Hermes or JSC selection
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
     } else {
         implementation jscFlavor
     }
 }
-
