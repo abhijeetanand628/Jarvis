@@ -30,6 +30,23 @@ export default function HomeScreen() {
 
     const startRecording = async() => {
         setRecording(true);
+        try{
+            await Voice.start('en-US'); // en-GB
+        } catch(error)
+        {
+            console.log('error : ', error);
+        }
+    }
+
+    const stopRecording = async() => {
+        try{
+            await Voice.stop();
+            setRecording(false);
+            // FETCH RESPONSE
+        } catch(error)
+        {
+            console.log('error : ', error);
+        }
     }
 
     const clear = () => {
@@ -115,15 +132,15 @@ export default function HomeScreen() {
                 speaking && (
                     <TouchableOpacity 
                         onPress={stopSpeaking}
-                        style={{backgroundColor: "#EF4444", borderRadius: wp(3.5), padding: wp(1.5)}} >
-                        <Text style={{color: 'white', fontWeight: '500'}}>Stop</Text>
+                        style={{backgroundColor: "#EF4444", borderRadius: wp(4), padding: wp(1.5)}} >
+                        <Text style={{color: 'white', fontWeight: '500', fontSize: wp(4.5)}}>Stop</Text>
                     </TouchableOpacity>
                 )
             }
 
             {
                 recording ? (
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={stopRecording}>
                         <LottieView style={{borderRadius: wp(8), width: wp(28), height: hp(11), marginBottom: wp(0.8)}} 
                             resizeMode= "contain"
                             source={require('../assets/images/voice.json')} 
@@ -132,7 +149,7 @@ export default function HomeScreen() {
                             />
                     </TouchableOpacity>
                 ) : (
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={startRecording}>
                         <Image style={{borderRadius: wp(8), width: wp(27), height: hp(10), marginBottom: wp(1)}} 
                             resizeMode= "contain"
                             source={require('../assets/images/recordingicon.jpg')} />
@@ -144,8 +161,8 @@ export default function HomeScreen() {
                 messages.length > 0 && (
                     <TouchableOpacity 
                         onPress={clear}
-                        style={{backgroundColor: "#9CA3AF", borderRadius: wp(3.5), padding: wp(1.5)}} >
-                        <Text style={{color: 'white', fontWeight: '500'}}>Clear</Text>
+                        style={{backgroundColor: "#9CA3AF", borderRadius: wp(4), padding: wp(1.5)}} >
+                        <Text style={{color: 'white', fontWeight: '500', fontSize: wp(4.5)}}>Clear</Text>
                     </TouchableOpacity>
                 )
             }
