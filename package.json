@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^14.1.0",
+    "@lottiefiles/dotlottie-react": "^0.6.5",
     "@react-native-community/voice": "^1.1.9",
     "@react-navigation/bottom-tabs": "^7.3.10",
     "@react-navigation/elements": "^2.5.0",
@@ -45,11 +46,11 @@
     "react-native-webview": "13.13.5"
   },
   "expo": {
-  "doctor": {
-    "reactNativeDirectoryCheck": {
-      "exclude": [
-        "react-native-responsive-screen",
-        "@react-native-community/voice"
+    "doctor": {
+      "reactNativeDirectoryCheck": {
+        "exclude": [
+          "react-native-responsive-screen",
+          "@react-native-community/voice"
         ]
       }
     }

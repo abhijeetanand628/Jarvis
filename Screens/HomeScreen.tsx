@@ -41,11 +41,12 @@ export default function HomeScreen() {
     const stopRecording = async() => {
         try{
             await Voice.stop();
-            setRecording(false);
-            // FETCH RESPONSE
         } catch(error)
         {
             console.log('error : ', error);
+        } finally{
+            setRecording(false);
+            // FETCH RESPONSE
         }
     }
 
