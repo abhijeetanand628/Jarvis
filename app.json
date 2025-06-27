@@ -20,7 +20,7 @@
       "permissions": [
         "RECORD_AUDIO"
       ],
-      "package": "com.abhi.jarvis"
+      "package": "jarvis.app"
     },
     "web": {
       "bundler": "metro",
